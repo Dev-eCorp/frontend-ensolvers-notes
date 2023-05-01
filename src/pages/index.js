@@ -7,7 +7,9 @@ import { useState, useEffect } from "react";
 async function fetchNotes() {
   let notes = [];
   try {
-    const response = await fetch("http://localhost:3001/notes");
+    const response = await fetch(
+      "https://backend-ensolvers-notes-production.up.railway.app/notes/"
+    );
     notes = await response.json();
   } catch (error) {
     console.error("Error fetching notes:", error);
@@ -25,13 +27,16 @@ export default function Home({ initialNotes }) {
   const handleCreateNote = async (title, content, tags) => {
     console.log(title, content, tags);
     try {
-      const response = await fetch("http://localhost:3001/notes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, content, tags }),
-      });
+      const response = await fetch(
+        "https://backend-ensolvers-notes-production.up.railway.app/notes/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, content, tags }),
+        }
+      );
       const newNote = await response.json();
       setNotes([newNote, ...notes]);
       setModalVisible(false);
@@ -42,12 +47,15 @@ export default function Home({ initialNotes }) {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3001/notes/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await fetch(
+        `https://backend-ensolvers-notes-production.up.railway.app/notes/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const updatedNotes = await fetchNotes();
       setNotes(updatedNotes);
     } catch (error) {
@@ -57,13 +65,16 @@ export default function Home({ initialNotes }) {
 
   const handleEdit = async (id, title, content, tags) => {
     try {
-      const response = await fetch(`http://localhost:3001/notes/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, content, tags }),
-      });
+      const response = await fetch(
+        `https://backend-ensolvers-notes-production.up.railway.app/notes/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, content, tags }),
+        }
+      );
 
       await response.json();
       const updatedNotes = await fetchNotes();
@@ -83,13 +94,16 @@ export default function Home({ initialNotes }) {
       const note = notes.find((note) => note.id === id);
       const newStatus = !note.status;
 
-      await fetch(`http://localhost:3001/notes/${id}/archive`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      await fetch(
+        `https://backend-ensolvers-notes-production.up.railway.app/notes/${id}/archive`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       fetchNotes().then((updatedNotes) => {
         setNotes(updatedNotes);
